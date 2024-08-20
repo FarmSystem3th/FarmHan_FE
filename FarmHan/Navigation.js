@@ -10,22 +10,22 @@ import MyPage from "./screens/MyPage";
 const Stack = createStackNavigator();
 
 function StackScreen() {
-  return (
-    <Stack.Navigator initialRouteName='SignUp'>
-      <Stack.Screen name='SignUp' component={SignUp} />
-      <Stack.Screen name='SignIn' component={SignIn} />
-      <Stack.Screen name='Main' component={Main} />
-      <Stack.Screen name='MyPage' component={MyPage} />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator initialRouteName='SignIn'>
+            <Stack.Screen name='Sign In' component={SignIn} />
+            <Stack.Screen name='Sign Up' component={SignUp} />
+            <Stack.Screen name='Main' component={Main} />
+            <Stack.Screen name='My Page' component={MyPage} />
+        </Stack.Navigator>
+    );
 }
 
 const Navigation = () => {
-  return (
-    <NavigationContainer>
-      <StackScreen />
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <StackScreen />
+        </NavigationContainer>
+    );
 };
 
 export default Navigation;
