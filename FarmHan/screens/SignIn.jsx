@@ -1,8 +1,36 @@
+import * as Notifications from "expo-notifications";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 const SignIn = () => {
+    // 푸쉬 알림 테스트 코드
+    const sendNotification = async () => {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "알림 제목 테스트입니다.",
+                body: "알림 내용 테스트입니다.",
+            },
+            trigger: null, // 즉시 보내려면 'trigger'에 'null'을 설정(시간을 지정하고 싶으면 숫자를 입력 => ex. 5분 == 300)
+            repeats: false, // 알림이 반복되지 않도록 설정
+        });
+    };
+
+    useEffect(() => {
+        sendNotification();
+
+        const subscription = Notifications.addNotificationReceivedListener((notification) => {
+            // 푸쉬 알림이 수신된 경우 이를 처리하는 코드
+            console.log("알림 전송 완료", notification);
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, []);
+
+    // SignIn 화면에 들어오면 자동으로 푸쉬 알림이 발송됩니다.
+
     const navigation = useNavigation();
 
     const [id, setId] = React.useState("");
