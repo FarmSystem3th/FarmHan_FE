@@ -45,7 +45,7 @@ const SignIn = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => navigation.navigate("Sign Up", { screen: "SignUp" })}
+                    onPress={() => navigation.navigate("회원가입", { screen: "SignUp" })}
                     style={Styles.SampleButton}
                 >
                     <Text>회원가입</Text>
