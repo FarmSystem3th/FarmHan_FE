@@ -11,11 +11,11 @@ const Stack = createStackNavigator();
 
 function StackScreen() {
     return (
-        <Stack.Navigator initialRouteName='SignIn'>
-            <Stack.Screen name='Sign In' component={SignIn} />
-            <Stack.Screen name='Sign Up' component={SignUp} />
-            <Stack.Screen name='Main' component={Main} />
-            <Stack.Screen name='My Page' component={MyPage} />
+        <Stack.Navigator initialRouteName='로그인'>
+            <Stack.Screen name='로그인' component={SignIn} />
+            <Stack.Screen name='회원가입' component={SignUp} />
+            <Stack.Screen name='메인' component={Main} />
+            <Stack.Screen name='마이페이지' component={MyPage} />
         </Stack.Navigator>
     );
 }
