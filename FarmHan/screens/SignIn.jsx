@@ -42,7 +42,7 @@ const SignIn = () => {
             return;
         }
         if (id === "admin" && password === "admin") {
-            navigation.navigate("Main", { screen: "Main" });
+            navigation.navigate("메인", { screen: "Main" });
             console.log(id, password);
             return;
         } else {
