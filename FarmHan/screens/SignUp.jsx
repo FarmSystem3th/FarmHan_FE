@@ -39,6 +39,7 @@ const SignUp = () => {
 
     const [ID, setID] = useState(""); // 아이디
     const [password, setPassword] = useState(""); // 비밀번호
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 비밀번호 보이기 여부
     const [guardianName, setGuardianName] = useState(""); // 보호자 이름
     const [phoneNumber, setPhoneNumber] = useState(""); // 보호자 전화번호
     const [targetName, setTargetName] = useState(""); // 대상자 이름
@@ -136,15 +137,25 @@ const SignUp = () => {
                 </View>
                 <View style={Styles.InputContainer}>
                     <Text style={Styles.Label}>비밀번호</Text>
-                    <TextInput
-                        style={Styles.Input}
-                        placeholder='사용하실 비밀번호를 입력해주세요'
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
-                        onFocus={() => handleFocus(1)}
-                        ref={(el) => (inputRefs.current[1] = el)}
-                    />
+                    <View style={Styles.PasswordContainer}>
+                        <TextInput
+                            style={Styles.PasswordInput}
+                            placeholder='사용하실 비밀번호를 입력해주세요'
+                            secureTextEntry={!isPasswordVisible}
+                            value={password}
+                            onChangeText={setPassword}
+                            onFocus={() => handleFocus(1)}
+                            ref={(el) => (inputRefs.current[1] = el)}
+                        />
+                        <TouchableOpacity
+                            style={Styles.ShowPasswordButton}
+                            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                        >
+                            <Text style={Styles.ShowPasswordButtonLabel}>
+                                {isPasswordVisible ? "숨기기" : "보이기"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={Styles.InputContainer}>
                     <Text style={Styles.Label}>보호자 성명</Text>
@@ -315,6 +326,29 @@ const Styles = StyleSheet.create({
         marginBottom: 25,
     },
 
+    PasswordContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: "gray",
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+    },
+
+    PasswordInput: {
+        flex: 1,
+        height: 40,
+    },
+
+    ShowPasswordButton: {
+        marginLeft: 10,
+    },
+
+    ShowPasswordButtonLabel: {
+        color: "#4CAF50",
+        fontSize: 14,
+    },
+
     Label: {
         fontSize: 14,
         marginBottom: 5,
@@ -323,7 +357,7 @@ const Styles = StyleSheet.create({
     Input: {
         borderColor: "gray",
         borderWidth: 1,
-        height: 36,
+        height: 40,
         padding: 10,
         borderRadius: 5,
     },
