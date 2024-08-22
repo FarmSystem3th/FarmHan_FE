@@ -7,6 +7,7 @@ import Main from "./screens/Main";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import MyPage from "./screens/MyPage";
+import List from "./screens/List";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ function StackScreen() {
             <Stack.Screen name='회원가입' component={SignUp} />
             <Stack.Screen name='메인' component={Main} />
             <Stack.Screen name='마이페이지' component={MyPage} />
+            <Stack.Screen name='채팅리스트' component={List} />
         </Stack.Navigator>
     );
 }
