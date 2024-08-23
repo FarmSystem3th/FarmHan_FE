@@ -14,9 +14,9 @@ const Stack = createStackNavigator();
 function StackScreen() {
     return (
         <Stack.Navigator initialRouteName='로그인'>
-            <Stack.Screen name='로그인' component={SignIn} />
+            <Stack.Screen name='로그인' component={SignIn} options={{ headerShown: false }} />
             <Stack.Screen name='회원가입' component={SignUp} />
-            <Stack.Screen name='메인' component={Main} />
+            <Stack.Screen name='메인' component={Main} options={{ headerShown: false }} />
             <Stack.Screen name='마이페이지' component={MyPage} />
             <Stack.Screen name='채팅리스트' component={List} />
         </Stack.Navigator>
