@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
@@ -54,6 +54,9 @@ const SignIn = () => {
 
     return (
         <View>
+            <View style={Styles.LogoContainer}>
+                <Image source={require("../assets/images/Main-Logo.png")} style={Styles.ImageWrapper} />
+            </View>
             <View style={Styles.loginContainer}>
                 <View style={Styles.textContainer}>
                     <TextInput placeholder='아이디' value={id} onChangeText={setId} style={Styles.input} />
@@ -100,20 +103,21 @@ const SignIn = () => {
 export default SignIn;
 
 const Styles = StyleSheet.create({
-    SampleButton: {
-        backgroundColor: "green",
-        padding: 10,
-        marginTop: "20%",
-        width: "20%",
-        alignSelf: "center",
+    LogoContainer: {
+        justifyContent: "center",
         alignItems: "center",
-        borderRadius: 10,
+        marginTop: "40%",
+    },
+
+    ImageWrapper: {
+        width: 256,
+        height: 256,
     },
 
     ButtonContainer: {
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 30,
+        marginTop: 10,
     },
 
     LoginButton: {
@@ -136,7 +140,7 @@ const Styles = StyleSheet.create({
     },
 
     loginContainer: {
-        marginTop: "50%",
+        marginTop: "10%",
         width: "100%",
         flexDirection: "column",
     },
