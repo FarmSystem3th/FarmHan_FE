@@ -1,10 +1,7 @@
 export const sendRequest = async (instance, method, url, data = {}) => {
     try {
         const response = await instance[method](url, data);
-        console.log(
-            `✅${instance.defaults.baseURL} -[${method}] success :`,
-            response,
-        );
+        console.log(`✅${instance.defaults.baseURL} -[${method}] success :`, response);
         return response;
     } catch (error) {
         console.error(
@@ -13,7 +10,7 @@ export const sendRequest = async (instance, method, url, data = {}) => {
             `error_status : `,
             error.response.status,
             `error_status_text: `,
-            error.response.statusText,
+            error.response.statusText
         );
         throw error;
     }
