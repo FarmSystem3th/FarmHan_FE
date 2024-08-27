@@ -18,7 +18,7 @@ import { userIdState } from "../recoil/user/userRecoilState";
 
 const MyPage = () => {
     const { myPageUser } = useUserHook();
-    const userId = useRecoilValue(userIdState); // Recoil에서 userId 가져오기
+    const userId = useRecoilValue(userIdState);
 
     const disabilityData = [
         { id: "지체장애", label: "지체장애" },
@@ -69,8 +69,7 @@ const MyPage = () => {
                 setDisabilityGrade(data.responseDto.disabledGrade);
                 setSpecialNote(data.responseDto.significant);
                 setRequireNote(data.responseDto.requirement);
-                setPressedDisability(data.responseDto.disabledType);
-
+                setPressedDisability(data.responseDto.disabledTypeList.map((item) => item.disabledType));
                 setLoading(false);
             } catch (error) {
                 setError(error.message);
