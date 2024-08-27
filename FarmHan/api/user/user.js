@@ -7,7 +7,9 @@ export const useUserHook = () => {
     const setUserIdState = useSetRecoilState(userIdState);
 
     const signUpUser = async (userData) => {
-        const url = createUrl("/signup"); // 쿼리 파라미터 없이 단순 경로를 생성
+
+        const url = createUrl("/signup");
+
 
         try {
             const response = await sendRequest(userInstance, "post", url, userData);
@@ -31,6 +33,9 @@ export const useUserHook = () => {
             throw error;
         }
 
+    };
+
+
      const loginUser = async (loginId, loginPassword) => {
          try {
              const response = await sendRequest(userInstance, "post", "/login", {
@@ -46,6 +51,7 @@ export const useUserHook = () => {
              console.error("Login failed:", error.message || "Unknown error");
              return false;
          }
+
     };
 
     return {
