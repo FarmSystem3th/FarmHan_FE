@@ -12,17 +12,12 @@ export const useUserHook = () => {
                  userPassword: loginPassword,
              });
 
-             console.log(response.data);
-
              if (response.data.success) {
                  setUserIdState(response.data.responseDto.userId);
                  return true;
-             } else {
-                 console.error("Login failed:", response.data?.message || "Unknown error");
-                 return false;
              }
          } catch (error) {
-             console.error("Error during login:", error);
+             console.error("Login failed:", error.message || "Unknown error");
              return false;
          }
     };
