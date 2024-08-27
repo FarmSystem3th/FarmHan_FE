@@ -8,10 +8,10 @@ const defaultInstance = axios.create({
     baseURL: BASE_URL,
 });
 
-const exampleInstance = axios.create(defaultInstance.defaults);
-exampleInstance.defaults.baseURL += "/example";
+const userInstance = axios.create(defaultInstance.defaults);
+//userInstance.defaults.baseURL += "/example"; 공통된 url있으면 추가
 
 export {
     defaultInstance,
-    exampleInstance,
+    userInstance,
 };
