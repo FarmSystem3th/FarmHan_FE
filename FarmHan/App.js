@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Navigation from "./Navigation";
+import 'whatwg-fetch';
 
 export default function App() {
     // // Expo 푸시 알림 설정 및 권한 요청

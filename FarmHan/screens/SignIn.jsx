@@ -2,6 +2,8 @@ import * as Notifications from "expo-notifications";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import {useUserHook} from "../api/user/user";
+import {userIdState} from "../recoil/user/userRecoilState";
 
 const SignIn = () => {
     // // 푸쉬 알림 테스트 코드
@@ -24,7 +26,7 @@ const SignIn = () => {
     //         console.log("알림 전송 완료", notification);
     //     });
 
-    //     return () => {
+    //     return () => {a
     //         subscription.remove();
     //     };
     // }, []);
@@ -35,21 +37,35 @@ const SignIn = () => {
 
     const [id, setId] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 비밀번호 보이기 여부
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const { loginUser } = useUserHook();
 
     const handleLogin = () => {
+        let check = false;
         if (id === "" || password === "") {
             alert("아이디와 비밀번호를 입력해주세요.");
             return;
+        } else {
+            check = loginUser(id, password);
         }
-        if (id === "admin" && password === "admin") {
+
+        console.log(userIdState.userId);
+
+        if (check){
             navigation.navigate("메인", { screen: "Main" });
-            console.log(id, password);
-            return;
         } else {
             alert("아이디와 비밀번호를 확인해주세요.");
             return;
         }
+
+        // if (id === "admin" && password === "admin") {
+        //     navigation.navigate("메인", { screen: "Main" });
+        //     console.log(id, password);
+        //     return;
+        // } else {
+        //     alert("아이디와 비밀번호를 확인해주세요.");
+        //     return;
+        // }
     };
 
     return (
