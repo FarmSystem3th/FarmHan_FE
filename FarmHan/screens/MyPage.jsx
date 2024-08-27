@@ -11,11 +11,14 @@ import {
     ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
+import { useUserHook } from "../api/user/user";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "../recoil/user/userRecoilState";
 
 const MyPage = () => {
-    const navigation = useNavigation();
+    const { myPageUser } = useUserHook();
+    const userId = useRecoilValue(userIdState); // Recoil에서 userId 가져오기
 
     const disabilityData = [
         { id: "지체장애", label: "지체장애" },
@@ -52,56 +55,48 @@ const MyPage = () => {
     const [requireNote, setRequireNote] = useState(""); // 요청사항
     const [inputHeight, setInputHeight] = useState(80); // 텍스트 창의 높이 조절
 
-    // // 서버에 response 요청 보내기
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             setLoading(true);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await myPageUser(userId);
+                setID(data.responseDto.userLoginId);
+                setPassword(data.responseDto.userPassword);
+                setGuardianName(data.responseDto.userName);
+                setPhoneNumber(data.responseDto.userNumber);
+                setTargetName(data.responseDto.patientName);
+                setGender(data.responseDto.patientSex === "M" ? "남성" : "여성");
+                setAge(data.responseDto.patientAge);
+                setDisabilityGrade(data.responseDto.disabledGrade);
+                setSpecialNote(data.responseDto.significant);
+                setRequireNote(data.responseDto.requirement);
+                setPressedDisability(data.responseDto.disabledType);
 
-    //             const response = await fetch("");
-    //             if (!response.ok) {
-    //                 throw new Error("데이터를 가져오는 데 실패했습니다.");
-    //             }
+                setLoading(false);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
 
-    //             const data = await response.json();
-    //             setID(data.userLoginId);
-    //             setPassword(data.userPassword);
-    //             setGuardianName(data.userName);
-    //             setPhoneNumber(data.userNumver);
-    //             setTargetName(data.patientName);
-    //             setGender(data.patientSex);
-    //             setAge(data.patientAge);
-    //             setPressedDisability(data.disabledType);
-    //             setDisabilityGrade(data.disabledGrade);
-    //             setSpecialNote(data.significant);
-    //             setRequireNote(data.require);
+        fetchData();
+    }, []);
 
-    //         } catch (error) {
-    //             console.log(error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+    if (loading) {
+        return (
+            <View style={Styles.ExceptContainer}>
+                <ActivityIndicator size='large' color='#0000ff' />
+                <Text style={{ marginTop: 5 }}>데이터를 불러오는 중입니다...</Text>
+            </View>
+        );
+    }
 
-    //     fetchData();
-    // }, []);
-
-    // if (loading) {
-    //     return (
-    //         <View style={Styles.ExceptContainer}>
-    //             <ActivityIndicator size='large' color='#0000ff' />
-    //             <Text style={{ marginTop: 5 }}>데이터를 불러오는 중입니다...</Text>
-    //         </View>
-    //     );
-    // }
-
-    // if (error) {
-    //     return (
-    //         <View style={Styles.ExceptContainer}>
-    //             <Text>에러가 발생했습니다: {error}</Text>
-    //         </View>
-    //     );
-    // }
+    if (error) {
+        return (
+            <View style={Styles.ExceptContainer}>
+                <Text>에러가 발생했습니다: {error}</Text>
+            </View>
+        );
+    }
 
     const formatPhoneNumber = (text) => {
         const cleaned = ("" + text).replace(/\D/g, "");

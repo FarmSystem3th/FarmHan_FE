@@ -12,9 +12,10 @@ import {
 import RNPickerSelect from "react-native-picker-select";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { signUpUser } from "../api/user/signUpUser";
+import { useUserHook } from "../api/user/user";
 
 const SignUp = () => {
+    const { signUpUser } = useUserHook();
     const navigation = useNavigation();
 
     const scrollViewRef = useRef(null);
@@ -121,19 +122,18 @@ const SignUp = () => {
                 disabledType: type,
             }));
 
-            // userData를 서버에서 요구하는 양식에 맞게 작성
             const userData = {
                 userLoginId: ID,
                 userPassword: password,
-                userName: guardianName, // 보호자의 이름을 userName으로 설정
+                userName: guardianName,
                 userNumber: phoneNumber,
                 patientAge: age,
-                patientSex: gender === "남성" ? "M" : "F", // 성별을 M 또는 F로 설정
-                patientName: targetName, // 대상자의 이름을 patientName으로 설정
+                patientSex: gender === "남성" ? "M" : "F",
+                patientName: targetName,
                 disabledGrade: disabilityGrade,
-                significant: specialNote, // 특이사항을 significant로 설정
-                requirement: requireNote, // 요청사항을 requirement로 설정
-                disabledTypes: disabledTypes, // 장애 유형 리스트
+                significant: specialNote,
+                requirement: requireNote,
+                disabledTypes: disabledTypes,
             };
 
             try {
