@@ -7,7 +7,9 @@ export const useUserHook = () => {
     const setUserIdState = useSetRecoilState(userIdState);
 
     const signUpUser = async (userData) => {
+
         const url = createUrl("/signup");
+
 
         try {
             const response = await sendRequest(userInstance, "post", url, userData);
@@ -30,23 +32,26 @@ export const useUserHook = () => {
             console.error("마이페이지 조회 실패:", error);
             throw error;
         }
+
     };
 
-    const loginUser = async (loginId, loginPassword) => {
-        try {
-            const response = await sendRequest(userInstance, "post", "/login", {
-                loginId: loginId,
-                userPassword: loginPassword,
-            });
 
-            if (response.data.success) {
-                setUserIdState(response.data.responseDto.userId);
-                return true;
-            }
-        } catch (error) {
-            console.error("Login failed:", error.message || "Unknown error");
-            return false;
-        }
+     const loginUser = async (loginId, loginPassword) => {
+         try {
+             const response = await sendRequest(userInstance, "post", "/login", {
+                 loginId: loginId,
+                 userPassword: loginPassword,
+             });
+
+             if (response.data.success) {
+                 setUserIdState(response.data.responseDto.userId);
+                 return true;
+             }
+         } catch (error) {
+             console.error("Login failed:", error.message || "Unknown error");
+             return false;
+         }
+
     };
 
     return {
