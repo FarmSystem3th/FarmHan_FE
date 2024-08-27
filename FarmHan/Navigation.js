@@ -7,7 +7,8 @@ import Main from "./screens/Main";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import MyPage from "./screens/MyPage";
-import List from "./screens/List";
+import CallList from "./screens/List/CallList";
+import CallHistory from "./screens/List/CallHistory";
 
 const Stack = createStackNavigator();
 
@@ -18,7 +19,8 @@ function StackScreen() {
             <Stack.Screen name='회원가입' component={SignUp} />
             <Stack.Screen name='메인' component={Main} options={{ headerShown: false }} />
             <Stack.Screen name='마이페이지' component={MyPage} />
-            <Stack.Screen name='채팅리스트' component={List} />
+            <Stack.Screen name='대화 목록' component={CallList} />
+            <Stack.Screen name='대화 상세 내용' component={CallHistory} />
         </Stack.Navigator>
     );
 }
