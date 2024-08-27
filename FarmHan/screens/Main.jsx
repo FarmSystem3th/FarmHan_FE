@@ -79,7 +79,7 @@ const Main = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={Styles.OptionButton}
-                    onPress={() => navigation.navigate("채팅리스트", { screen: "List" })}
+                    onPress={() => navigation.navigate("대화 목록", { screen: "CallList" })}
                 >
                     <Text style={Styles.OptionButtonLabel}>대화 목록</Text>
                 </TouchableOpacity>
