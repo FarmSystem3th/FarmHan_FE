@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image } from "reac
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {useUserHook} from "../api/user/user";
-import {userIdState} from "../recoil/user/userRecoilState";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "../recoil/user/userRecoilState";
 
 const SignIn = () => {
     // // 푸쉬 알림 테스트 코드
@@ -40,33 +41,25 @@ const SignIn = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const { loginUser } = useUserHook();
 
-    const handleLogin = () => {
-        let check = false;
+    const handleLogin = async () => {
         if (id === "" || password === "") {
             alert("아이디와 비밀번호를 입력해주세요.");
             return;
         } else {
-            check = loginUser(id, password);
+            const loginSuccess = await loginUser(id, password);
+
+            if (loginSuccess) {
+                navigation.navigate("메인", { screen: "Main" });
+            } else {
+                alert("아이디와 비밀번호를 확인해주세요.");
+                return;
+            }
         }
-
-        console.log(userIdState.userId);
-
-        if (check){
-            navigation.navigate("메인", { screen: "Main" });
-        } else {
-            alert("아이디와 비밀번호를 확인해주세요.");
-            return;
-        }
-
-        // if (id === "admin" && password === "admin") {
-        //     navigation.navigate("메인", { screen: "Main" });
-        //     console.log(id, password);
-        //     return;
-        // } else {
-        //     alert("아이디와 비밀번호를 확인해주세요.");
-        //     return;
-        // }
     };
+
+    const userId = useRecoilValue(userIdState);
+
+    console.log(userId);
 
     return (
         <View>

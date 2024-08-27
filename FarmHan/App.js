@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Navigation from "./Navigation";
+import { RecoilRoot } from "recoil";
 import 'whatwg-fetch';
 
 export default function App() {
@@ -40,7 +41,11 @@ export default function App() {
     //     });
     // };
 
-    return <Navigation />;
+    return (
+        <RecoilRoot>
+            <Navigation />
+        </RecoilRoot>
+    );
 }
 
 // async function registerForPushNotificationsAsync() {

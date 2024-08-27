@@ -5,27 +5,6 @@ import { userInstance } from "../instance";
 
 export const useUserHook = () => {
     const setUserIdState = useSetRecoilState(userIdState);
-    const loginUser = async (loginId, loginPassword) => {
-        try {
-            const response = await sendRequest(userInstance, "post", "/login", {
-                loginId: loginId,
-                userPassword: loginPassword,
-            });
-
-            console.log(response.data);
-
-            if (response.data.success) {
-                setUserIdState(response.data.responseDto.userId);
-                return true;
-            } else {
-                console.error("Login failed:", response.data?.message || "Unknown error");
-                return false;
-            }
-        } catch (error) {
-            console.error("Error during login:", error);
-            return false;
-        }
-    };
 
     const signUpUser = async (userData) => {
         const url = createUrl("/signup"); // 쿼리 파라미터 없이 단순 경로를 생성
@@ -51,6 +30,22 @@ export const useUserHook = () => {
             console.error("마이페이지 조회 실패:", error);
             throw error;
         }
+
+     const loginUser = async (loginId, loginPassword) => {
+         try {
+             const response = await sendRequest(userInstance, "post", "/login", {
+                 loginId: loginId,
+                 userPassword: loginPassword,
+             });
+
+             if (response.data.success) {
+                 setUserIdState(response.data.responseDto.userId);
+                 return true;
+             }
+         } catch (error) {
+             console.error("Login failed:", error.message || "Unknown error");
+             return false;
+         }
     };
 
     return {

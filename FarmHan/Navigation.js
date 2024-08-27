@@ -2,7 +2,6 @@ import * as Notifications from "expo-notifications";
 import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { RecoilRoot } from "recoil";
 
 import Main from "./screens/Main";
 import SignIn from "./screens/SignIn";
@@ -47,9 +46,7 @@ const Navigation = () => {
 
     return (
         <NavigationContainer>
-            <RecoilRoot>
-                <StackScreen />
-            </RecoilRoot>
+            <StackScreen />
         </NavigationContainer>
     );
 };
