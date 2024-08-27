@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image } from "reac
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {useUserHook} from "../api/user/user";
-import {userIdState} from "../recoil/user/userRecoilState";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "../recoil/user/userRecoilState";
 
 const SignIn = () => {
     // // 푸쉬 알림 테스트 코드
@@ -55,6 +56,10 @@ const SignIn = () => {
             }
         }
     };
+
+    const userId = useRecoilValue(userIdState);
+
+    console.log(userId);
 
     return (
         <View>
