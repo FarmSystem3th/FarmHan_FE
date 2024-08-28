@@ -3,17 +3,23 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Voice from "@react-native-voice/voice";
 import * as Speech from "expo-speech";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {callIdState, userIdState} from "../recoil/user/userRecoilState";
+import {useUserHook} from "../api/user/user";
 
 const Main = () => {
     const navigation = useNavigation();
     const [isRecording, setIsRecording] = useState(false);
     const [finalText, setFinalText] = useState("");
     const resultsRef = useRef([]);
+    const [callId, setCallId] = useRecoilState(callIdState);
+    const userId = useRecoilValue(userIdState);
 
     const placeholderConverSation = "인식된 음성이 텍스트로 출력됩니다.";
     const placeholderAnswer = "AI의 답변이 텍스트로 출력됩니다.";
 
-    const exampleText = "";
+    const [answerText, setAnswerText] = useState("");
+    const { callStart, callIng } = useUserHook();
 
     useEffect(() => {
         Voice.onSpeechPartialResults = onSpeechResults;
@@ -61,12 +67,36 @@ const Main = () => {
 
     const speak = () => {
         console.log("speak");
-        Speech.speak(exampleText, {
+        Speech.speak(answerText, {
             language: "ko",
             pitch: 1.0,
             rate: 1.0,
         });
     };
+
+    const stopCall = () => {
+        setCallId(null);
+        setFinalText("");
+        setAnswerText("");
+    };
+
+    const startCall = async () => {
+        await callStart(userId);
+    };
+
+    useEffect(() => {
+        if (callId && finalText) {
+            console.log(finalText);
+            const fetchAnswer = async () => {
+                console.log(callId);
+                const answer = await callIng(userId, finalText, callId);
+                setAnswerText(answer);
+                console.log("대화중:", answer);
+            }
+
+            fetchAnswer();
+        }
+    }, [finalText]);
 
     return (
         <View style={Styles.mainSection}>
@@ -110,8 +140,8 @@ const Main = () => {
                 <View style={[Styles.borderedSection, { flex: 1 }]}>
                     <ScrollView style={Styles.scrollContainer} contentContainerStyle={Styles.scrollContent}>
                         <View style={Styles.textSection}>
-                            <Text style={[Styles.textStyle, exampleText === "" && Styles.placeholder]}>
-                                {exampleText !== "" ? exampleText : placeholderAnswer}
+                            <Text style={[Styles.textStyle, answerText === "" && Styles.placeholder]}>
+                                {answerText !== "" ? answerText : placeholderAnswer}
                             </Text>
                         </View>
                     </ScrollView>
@@ -119,7 +149,18 @@ const Main = () => {
 
                 <View style={Styles.ButtonContainer}>
                     <TouchableOpacity style={Styles.ButtonWrapper} onPress={speak}>
-                        <Text style={Styles.ButtonLabel}>답변 생성</Text>
+                        <Text style={Styles.ButtonLabel}>음성 답변</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View>
+                <View style={Styles.ButtonContainer}>
+                    <TouchableOpacity
+                        style={Styles.ButtonWrapper}
+                        onPress={callId ? stopCall : startCall}
+                    >
+                        <Text style={Styles.ButtonLabel}>{callId ? "전화종료" : "전화하기"}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
