@@ -30,7 +30,7 @@ const CallList = () => {
         return responseDto.callHistory.map((call) => ({
             callId: call.callId.toString(),
             createAt: formatDate(call.createAt),
-            callHistory: call.callHistoryList.map((history) => ({
+            callHistoryList: call.callHistoryList.map((history) => ({
                 callHistoryId: history.callHistoryId,
                 createAt: formatDate(history.createAt),
                 message_answer: history.message_answer,
@@ -56,7 +56,7 @@ const CallList = () => {
     }, []);
 
     const handleCallPress = (call) => {
-        navigation.navigate("대화 상세 내용", { callHistoryList: call.callHistory });
+        navigation.navigate("대화 상세 내용", { callHistoryList: call.callHistoryList });
     };
 
     if (loading) {
