@@ -40,15 +40,19 @@ const SignUp = () => {
     ];
 
     const [ID, setID] = useState(""); // 아이디
+    const [isIDValid, setIsIDValid] = useState(false); // 아이디 유효성 상태
+    const [idMessage, setIdMessage] = useState(""); // 아이디 유효성 메시지
     const [password, setPassword] = useState(""); // 비밀번호
     const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 비밀번호 보이기 여부
+    const [isPasswordValid, setIsPasswordValid] = useState(false); // 비밀번호 유효성 상태
+    const [passwordMessage, setPasswordMessage] = useState(""); // 비밀번호 유효성 메시지
     const [guardianName, setGuardianName] = useState(""); // 보호자 이름
     const [phoneNumber, setPhoneNumber] = useState(""); // 보호자 전화번호
     const [targetName, setTargetName] = useState(""); // 대상자 이름
     const [gender, setGender] = useState(null); // 대상자 성별
     const [age, setAge] = useState(""); // 대상자 나이
     const [pressedDisability, setPressedDisability] = useState([]); // 대상자 장애 유형
-    const [disabilityGrade, setDisabilityGrade] = useState("1"); // 대상자 장애 등급
+    const [disabilityGrade, setDisabilityGrade] = useState(null); // 대상자 장애 등급
     const [specialNote, setSpecialNote] = useState(""); // 특이사항
     const [requireNote, setRequireNote] = useState(""); // 요청사항
     const [inputHeight, setInputHeight] = useState(80); // 텍스트 창의 높이 조절
@@ -57,13 +61,17 @@ const SignUp = () => {
     const checkButtonEnabled = () => {
         if (
             ID.trim() !== "" &&
+            ID.length >= 3 &&
             password.trim() !== "" &&
             guardianName.trim() !== "" &&
             phoneNumber.trim() !== "" &&
             targetName.trim() !== "" &&
             gender !== null &&
             age.trim() !== "" &&
-            disabilityGrade !== ""
+            pressedDisability.length > 0 &&
+            disabilityGrade !== "" &&
+            isIDValid &&
+            isPasswordValid
         ) {
             setIsCompleteEnabled(true);
         } else {
@@ -73,12 +81,58 @@ const SignUp = () => {
 
     useEffect(() => {
         checkButtonEnabled();
-    }, [ID, password, guardianName, phoneNumber, targetName, gender, age, disabilityGrade]);
+    }, [ID, password, guardianName, phoneNumber, targetName, gender, age, pressedDisability, disabilityGrade]);
 
     const handleFocus = (index) => {
         inputRefs.current[index].measureLayout(scrollViewRef.current, (x, y) => {
             scrollViewRef.current.scrollTo({ y: y - 20, animated: true });
         });
+    };
+
+    const filterLowercaseEnglishAndNumbers = (text) => {
+        return text.replace(/[^a-z0-9]/g, "");
+    };
+
+    const filterKoreanEnglish = (text) => {
+        return text.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z\s]/g, "");
+    };
+
+    const handleIDChange = (text) => {
+        const filteredText = filterLowercaseEnglishAndNumbers(text);
+        if (filteredText.length <= 12) {
+            setID(filteredText);
+            if (filteredText.length >= 3 && filteredText.length <= 12) {
+                setIsIDValid(true);
+                setIdMessage("사용 가능한 아이디입니다.");
+            } else {
+                setIsIDValid(false);
+                setIdMessage("사용 불가능한 아이디입니다.");
+            }
+        } else {
+            setIsIDValid(false);
+            setIdMessage("사용 불가능한 아이디입니다.");
+        }
+    };
+
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+        if (text.length >= 6 && text.length <= 20) {
+            setIsPasswordValid(true);
+            setPasswordMessage("사용 가능한 비밀번호입니다.");
+        } else {
+            setIsPasswordValid(false);
+            setPasswordMessage("비밀번호는 6자에서 20자 사이여야 합니다.");
+        }
+    };
+
+    const handleGuardianNameChange = (text) => {
+        const filteredText = filterKoreanEnglish(text);
+        setGuardianName(filteredText);
+    };
+
+    const handleTargetNameChange = (text) => {
+        const filteredText = filterKoreanEnglish(text);
+        setTargetName(filteredText);
     };
 
     const formatPhoneNumber = (text) => {
@@ -117,7 +171,6 @@ const SignUp = () => {
 
     const handleSignUp = async () => {
         if (isCompleteEnabled) {
-            // pressedDisability 배열을 disabledTypes 형식으로 변환
             const disabledTypes = pressedDisability.map((type) => ({
                 disabledType: type,
             }));
@@ -164,10 +217,22 @@ const SignUp = () => {
                         style={Styles.Input}
                         placeholder='사용하실 아이디를 입력해주세요'
                         value={ID}
-                        onChangeText={setID}
+                        onChangeText={handleIDChange}
+                        autoCapitalize='none'
+                        keyboardType='default'
                         onFocus={() => handleFocus(0)}
                         ref={(el) => (inputRefs.current[0] = el)}
                     />
+                    <Text
+                        style={{
+                            color: isIDValid ? "green" : "red",
+                            marginTop: 5,
+                            marginBottom: -15,
+                            fontSize: 12,
+                        }}
+                    >
+                        {idMessage}
+                    </Text>
                 </View>
                 <View style={Styles.InputContainer}>
                     <Text style={Styles.Label}>비밀번호</Text>
@@ -177,7 +242,7 @@ const SignUp = () => {
                             placeholder='사용하실 비밀번호를 입력해주세요'
                             secureTextEntry={!isPasswordVisible}
                             value={password}
-                            onChangeText={setPassword}
+                            onChangeText={handlePasswordChange}
                             onFocus={() => handleFocus(1)}
                             ref={(el) => (inputRefs.current[1] = el)}
                         />
@@ -190,6 +255,16 @@ const SignUp = () => {
                             </Text>
                         </TouchableOpacity>
                     </View>
+                    <Text
+                        style={{
+                            color: isPasswordValid ? "green" : "red",
+                            marginTop: 5,
+                            marginBottom: -15,
+                            fontSize: 12,
+                        }}
+                    >
+                        {passwordMessage}
+                    </Text>
                 </View>
                 <View style={Styles.InputContainer}>
                     <Text style={Styles.Label}>보호자 성명</Text>
@@ -197,7 +272,7 @@ const SignUp = () => {
                         style={Styles.Input}
                         placeholder='보호자 성명을 입력해주세요'
                         value={guardianName}
-                        onChangeText={setGuardianName}
+                        onChangeText={handleGuardianNameChange}
                         onFocus={() => handleFocus(2)}
                         ref={(el) => (inputRefs.current[2] = el)}
                     />
@@ -220,7 +295,7 @@ const SignUp = () => {
                         style={Styles.Input}
                         placeholder='대상자 성명을 입력해주세요'
                         value={targetName}
-                        onChangeText={setTargetName}
+                        onChangeText={handleTargetNameChange}
                         onFocus={() => handleFocus(4)}
                         ref={(el) => (inputRefs.current[4] = el)}
                     />
@@ -232,13 +307,31 @@ const SignUp = () => {
                             style={[Styles.GenderButton, gender === "남성" && Styles.GenderButtonSelected]}
                             onPress={() => setGender("남성")}
                         >
-                            <Text style={Styles.GenderButtonText}>남성</Text>
+                            <Text
+                                style={[
+                                    Styles.GenderButtonText,
+                                    gender == "남성"
+                                        ? Styles.GenderButtonTextPressed
+                                        : Styles.GenderButtonTextNotPressed,
+                                ]}
+                            >
+                                남성
+                            </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[Styles.GenderButton, gender === "여성" && Styles.GenderButtonSelected]}
                             onPress={() => setGender("여성")}
                         >
-                            <Text style={Styles.GenderButtonText}>여성</Text>
+                            <Text
+                                style={[
+                                    Styles.GenderButtonText,
+                                    gender == "여성"
+                                        ? Styles.GenderButtonTextPressed
+                                        : Styles.GenderButtonTextNotPressed,
+                                ]}
+                            >
+                                여성
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -271,7 +364,14 @@ const SignUp = () => {
                                         ]}
                                         onPress={() => handleDisabilityPress(button.id)}
                                     >
-                                        <Text style={Styles.ButtonText}>{button.label}</Text>
+                                        <Text
+                                            style={[
+                                                Styles.ButtonText,
+                                                isPressed ? Styles.ButtonTextPressed : Styles.ButtonTextNotPressed,
+                                            ]}
+                                        >
+                                            {button.label}
+                                        </Text>
                                     </TouchableOpacity>
                                 );
                             })}
@@ -344,8 +444,8 @@ const SignUp = () => {
 const Styles = StyleSheet.create({
     Container: {
         flex: 1,
-        backgroundColor: "white",
         paddingTop: StatusBar.currentHeight || 10,
+        backgroundColor: "white",
     },
 
     ScrollViewContent: {
@@ -409,6 +509,7 @@ const Styles = StyleSheet.create({
         borderColor: "#ccc",
         borderWidth: 1,
         borderRadius: 5,
+        backgroundColor: "white",
     },
 
     GenderButtonSelected: {
@@ -417,6 +518,14 @@ const Styles = StyleSheet.create({
 
     GenderButtonText: {
         color: "#000",
+    },
+
+    GenderButtonTextPressed: {
+        color: "white",
+    },
+
+    GenderButtonTextNotPressed: {
+        color: "black",
     },
 
     ButtonContainer: {
@@ -441,6 +550,7 @@ const Styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ccc",
+        backgroundColor: "white",
     },
 
     ButtonPressed: {
@@ -452,9 +562,16 @@ const Styles = StyleSheet.create({
     },
 
     ButtonText: {
-        color: "black",
         fontSize: 16,
         textAlign: "center",
+    },
+
+    ButtonTextPressed: {
+        color: "white",
+    },
+
+    ButtonTextNotPressed: {
+        color: "black",
     },
 
     PickerContainer: {
