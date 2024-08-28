@@ -1,76 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useUserHook } from "../../api/user/user";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "../../recoil/user/userRecoilState";
 
 const CallList = () => {
+    const { callListUser } = useUserHook();
+    const userId = useRecoilValue(userIdState);
+
     const navigation = useNavigation();
 
     const [callData, setCallData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const tempCallData = [
-        {
-            callId: "1",
-            createAt: "2024-08-27T21:00:00",
-            callHistory: [
-                {
-                    call_history_id: 1,
-                    createAt: "2024-08-27T21:05:00",
-                    message_answer: "아니요. 위험한 행동이니 하시면 안됩니다.",
-                    message_question: "계란 자체를 전자레인지에 넣어도 되나요???",
-                },
-                {
-                    call_history_id: 2,
-                    createAt: "2024-08-27T21:10:00",
-                    message_answer: "물이 필요합니다.",
-                    message_question: "계란을 삶을 때 물이 필요한가요?",
-                },
-                {
-                    call_history_id: 3,
-                    createAt: "2024-08-27T21:10:00",
-                    message_answer: "물이 필요합니다.",
-                    message_question: "계란을 삶을 때 물이 필요한가요?",
-                },
-                {
-                    call_history_id: 4,
-                    createAt: "2024-08-27T21:10:00",
-                    message_answer: "물이 필요합니다.",
-                    message_question: "계란을 삶을 때 물이 필요한가요?",
-                },
-                {
-                    call_history_id: 5,
-                    createAt: "2024-08-27T21:10:00",
-                    message_answer: "물이 필요합니다.",
-                    message_question: "계란을 삶을 때 물이 필요한가요?",
-                },
-                {
-                    call_history_id: 6,
-                    createAt: "2024-08-27T21:10:00",
-                    message_answer: "물이 필요합니다.",
-                    message_question: "계란을 삶을 때 물이 필요한가요?",
-                },
-            ],
-        },
-        {
-            callId: "2",
-            createAt: "2024-08-22T08:00:00",
-            callHistory: [
-                {
-                    call_history_id: 1,
-                    createAt: "2024-08-22T08:05:00",
-                    message_answer: "네, 할 수 있습니다.",
-                    message_question: "계란 프라이는 간단한가요?",
-                },
-            ],
-        },
-    ];
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
+    };
+
+    const transformResponseData = (responseDto) => {
+        return responseDto.callHistory.map((call) => ({
+            callId: call.callId.toString(),
+            createAt: formatDate(call.createAt),
+            callHistory: call.callHistoryList.map((history) => ({
+                callHistoryId: history.callHistoryId,
+                createAt: formatDate(history.createAt),
+                message_answer: history.message_answer,
+                message_question: history.message_question,
+            })),
+        }));
+    };
 
     useEffect(() => {
         const fetchCallData = async () => {
             try {
-                // const response = await fetch("https://example.com/api/callHistory");
-                // const data = await response.json();
-                setCallData(tempCallData);
+                const data = await callListUser(userId);
+                const transformedData = await transformResponseData(data.responseDto);
+                setCallData(transformedData);
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
             } finally {
@@ -82,7 +56,7 @@ const CallList = () => {
     }, []);
 
     const handleCallPress = (call) => {
-        navigation.navigate("대화 상세 내용", { callHistory: call.callHistory });
+        navigation.navigate("대화 상세 내용", { callHistoryList: call.callHistory });
     };
 
     if (loading) {

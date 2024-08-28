@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 
 const CallHistory = ({ route }) => {
-    const { callHistory } = route.params;
+    const { callHistoryList } = route.params;
 
     const renderItem = ({ item }) => (
         <>
@@ -21,8 +21,8 @@ const CallHistory = ({ route }) => {
     return (
         <View style={Styles.Container}>
             <FlatList
-                data={callHistory}
-                keyExtractor={(item) => item.call_history_id.toString()}
+                data={callHistoryList}
+                keyExtractor={(item) => item.callHistoryId.toString()}
                 renderItem={renderItem}
                 contentContainerStyle={{ padding: 20 }}
                 inverted={true}
@@ -66,7 +66,7 @@ const Styles = StyleSheet.create({
         fontSize: 12,
         color: "#000",
         marginTop: 5,
-        alignSelf: "flex-end",
+        alignSelf: "flex-start",
     },
 });
 
