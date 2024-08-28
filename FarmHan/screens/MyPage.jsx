@@ -50,7 +50,7 @@ const MyPage = () => {
     const [gender, setGender] = useState(""); // 대상자 성별
     const [age, setAge] = useState(""); // 대상자 나이
     const [pressedDisability, setPressedDisability] = useState([]); // 대상자 장애 유형
-    const [disabilityGrade, setDisabilityGrade] = useState("1"); // 대상자 장애 등급
+    const [disabilityGrade, setDisabilityGrade] = useState(null); // 대상자 장애 등급
     const [specialNote, setSpecialNote] = useState(""); // 특이사항
     const [requireNote, setRequireNote] = useState(""); // 요청사항
     const [inputHeight, setInputHeight] = useState(80); // 텍스트 창의 높이 조절
@@ -206,16 +206,32 @@ const MyPage = () => {
                         <TouchableOpacity
                             style={[Styles.GenderButton, gender === "남성" && Styles.GenderButtonSelected]}
                             onPress={() => setGender("남성")}
-                            disabled={true}
                         >
-                            <Text style={Styles.GenderButtonText}>남성</Text>
+                            <Text
+                                style={[
+                                    Styles.GenderButtonText,
+                                    gender == "남성"
+                                        ? Styles.GenderButtonTextPressed
+                                        : Styles.GenderButtonTextNotPressed,
+                                ]}
+                            >
+                                남성
+                            </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[Styles.GenderButton, gender === "여성" && Styles.GenderButtonSelected]}
                             onPress={() => setGender("여성")}
-                            disabled={true}
                         >
-                            <Text style={Styles.GenderButtonText}>여성</Text>
+                            <Text
+                                style={[
+                                    Styles.GenderButtonText,
+                                    gender == "여성"
+                                        ? Styles.GenderButtonTextPressed
+                                        : Styles.GenderButtonTextNotPressed,
+                                ]}
+                            >
+                                여성
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -248,7 +264,14 @@ const MyPage = () => {
                                         onPress={() => handleDisabilityPress(button.id)}
                                         disabled={true}
                                     >
-                                        <Text style={Styles.ButtonText}>{button.label}</Text>
+                                        <Text
+                                            style={[
+                                                Styles.ButtonText,
+                                                isPressed ? Styles.ButtonTextPressed : Styles.ButtonTextNotPressed,
+                                            ]}
+                                        >
+                                            {button.label}
+                                        </Text>
                                     </TouchableOpacity>
                                 );
                             })}
@@ -378,6 +401,7 @@ const Styles = StyleSheet.create({
         borderColor: "#ccc",
         borderWidth: 1,
         borderRadius: 5,
+        backgroundColor: "white",
     },
 
     GenderButtonSelected: {
@@ -386,6 +410,14 @@ const Styles = StyleSheet.create({
 
     GenderButtonText: {
         color: "#000",
+    },
+
+    GenderButtonTextPressed: {
+        color: "white",
+    },
+
+    GenderButtonTextNotPressed: {
+        color: "black",
     },
 
     ButtonContainer: {
@@ -410,6 +442,7 @@ const Styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ccc",
+        backgroundColor: "white",
     },
 
     ButtonPressed: {
@@ -421,9 +454,16 @@ const Styles = StyleSheet.create({
     },
 
     ButtonText: {
-        color: "black",
         fontSize: 16,
         textAlign: "center",
+    },
+
+    ButtonTextPressed: {
+        color: "white",
+    },
+
+    ButtonTextNotPressed: {
+        color: "black",
     },
 
     PickerContainer: {
