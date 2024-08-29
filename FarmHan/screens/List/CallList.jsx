@@ -63,6 +63,7 @@ const CallList = () => {
         return (
             <View style={Styles.LoadingContainer}>
                 <ActivityIndicator size='large' color='#4CAF50' />
+                <Text style={{ marginTop: 5 }}>데이터를 불러오는 중입니다...</Text>
             </View>
         );
     }
@@ -78,6 +79,13 @@ const CallList = () => {
                         <Text style={Styles.Label}>{item.createAt}</Text>
                     </TouchableOpacity>
                 )}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={callData.length === 0 ? { flex: 1 } : null}
+                ListEmptyComponent={() => (
+                    <View style={Styles.EmptyContainer}>
+                        <Text style={Styles.EmptyText}>통화 내역이 없습니다.</Text>
+                    </View>
+                )}
             />
         </View>
     );
@@ -86,7 +94,8 @@ const CallList = () => {
 const Styles = StyleSheet.create({
     Container: {
         flex: 1,
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 0,
     },
     ListItem: {
         paddingVertical: 25,
@@ -113,6 +122,19 @@ const Styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+
+    EmptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+
+    EmptyText: {
+        fontSize: 20,
+        color: "#aaa",
+        textAlign: "center",
     },
 });
 
