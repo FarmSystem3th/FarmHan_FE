@@ -4,35 +4,35 @@
         "slug": "FarmHan",
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/images/FarmHan-icon.png",
+        "icon": "./assets/images/ios-icon.png",
         "userInterfaceStyle": "light",
         "splash": {
-            "image": "./assets/images/FarmHan-splash.png",
+            "image": "./assets/images/splash-image.png",
             "resizeMode": "contain",
             "backgroundColor": "#fff"
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.kimd0ng.FarmHan",
-            "icon": "./assets/images/FarmHan-icon.png",
+            "bundleIdentifier": "com.T01.FarmHan",
+            "icon": "./assets/images/ios-icon.png",
             "splash": {
-                "image": "./assets/images/FarmHan-splash.png",
+                "image": "./assets/images/splash-image.png",
                 "resizeMode": "contain",
                 "backgroundColor": "#fff"
             }
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/images/FarmHan-icon.png",
+                "foregroundImage": "./assets/images/android-icon.png",
                 "backgroundColor": "#fff"
             },
             "splash": {
-                "image": "./assets/images/FarmHan-splash.png",
+                "image": "./assets/images/splash-icon.png",
                 "resizeMode": "contain",
                 "backgroundColor": "#fff"
             },
             "permissions": ["android.permission.RECORD_AUDIO"],
-            "package": "com.kimd0ng.FarmHan"
+            "package": "com.T01.FarmHan"
         },
         "web": {
             "favicon": "./assets/favicon.png"
