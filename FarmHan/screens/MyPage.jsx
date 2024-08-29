@@ -83,7 +83,7 @@ const MyPage = () => {
     if (loading) {
         return (
             <View style={Styles.ExceptContainer}>
-                <ActivityIndicator size='large' color='#0000ff' />
+                <ActivityIndicator size='large' color='#4CAF50' />
                 <Text style={{ marginTop: 5 }}>데이터를 불러오는 중입니다...</Text>
             </View>
         );
