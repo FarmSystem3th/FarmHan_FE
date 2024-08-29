@@ -18,14 +18,21 @@ const CallHistory = ({ route }) => {
         </>
     );
 
+    const renderEmptyComponent = () => (
+        <View style={Styles.EmptyContainer}>
+            <Text style={Styles.EmptyText}>대화 내용이 없습니다.</Text>
+        </View>
+    );
+
     return (
         <View style={Styles.Container}>
             <FlatList
                 data={callHistoryList}
                 keyExtractor={(item) => item.callHistoryId.toString()}
                 renderItem={renderItem}
-                contentContainerStyle={{ padding: 20 }}
-                inverted={true}
+                contentContainerStyle={{ padding: 20, flexGrow: 1 }}
+                inverted={callHistoryList.length > 0}
+                ListEmptyComponent={renderEmptyComponent}
             />
         </View>
     );
@@ -67,6 +74,17 @@ const Styles = StyleSheet.create({
         color: "#000",
         marginTop: 5,
         alignSelf: "flex-start",
+    },
+
+    EmptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    EmptyText: {
+        fontSize: 18,
+        color: "#aaa",
+        textAlign: "center",
     },
 });
 
