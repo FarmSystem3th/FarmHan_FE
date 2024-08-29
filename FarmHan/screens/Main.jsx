@@ -3,9 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Voice from "@react-native-voice/voice";
 import * as Speech from "expo-speech";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {callIdState, userIdState} from "../recoil/user/userRecoilState";
-import {useUserHook} from "../api/user/user";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { callIdState, userIdState } from "../recoil/user/userRecoilState";
+import { useUserHook } from "../api/user/user";
 
 const Main = () => {
     const navigation = useNavigation();
@@ -14,6 +14,8 @@ const Main = () => {
     const resultsRef = useRef([]);
     const [callId, setCallId] = useRecoilState(callIdState);
     const userId = useRecoilValue(userIdState);
+
+    const [isCallActive, setIsCallActive] = useState(false);
 
     const placeholderConverSation = "인식된 음성이 텍스트로 출력됩니다.";
     const placeholderAnswer = "AI의 답변이 텍스트로 출력됩니다.";
@@ -58,8 +60,6 @@ const Main = () => {
         try {
             setIsRecording(false);
             await Voice.stop();
-            // setFinalText(resultsRef.current.join(" "));
-            // console.log("음성 인식 종료:", resultsRef.current);
         } catch (e) {
             console.error(e);
         }
@@ -78,9 +78,11 @@ const Main = () => {
         setCallId(null);
         setFinalText("");
         setAnswerText("");
+        setIsCallActive(false);
     };
 
     const startCall = async () => {
+        setIsCallActive(true);
         await callStart(userId);
     };
 
@@ -92,7 +94,7 @@ const Main = () => {
                 const answer = await callIng(userId, finalText, callId);
                 setAnswerText(answer);
                 console.log("대화중:", answer);
-            }
+            };
 
             fetchAnswer();
         }
@@ -127,9 +129,13 @@ const Main = () => {
 
                 <View style={Styles.ButtonContainer}>
                     <TouchableOpacity
-                        style={Styles.ButtonWrapper}
+                        style={[
+                            Styles.ButtonWrapper,
+                            isRecording ? Styles.ChatQuitButtonWrapper : Styles.ChatStartButtonWrapper,
+                            !isCallActive && Styles.ButtonDisabled,
+                        ]}
                         onPress={isRecording ? stopSpeechToText : startSpeechToText}
-                        disabled={!Voice.isAvailable()}
+                        disabled={!isCallActive || !Voice.isAvailable()}
                     >
                         <Text style={Styles.ButtonLabel}>{isRecording ? "대화 중지" : "대화 시작"}</Text>
                     </TouchableOpacity>
@@ -148,21 +154,26 @@ const Main = () => {
                 </View>
 
                 <View style={Styles.ButtonContainer}>
-                    <TouchableOpacity style={Styles.ButtonWrapper} onPress={speak}>
-                        <Text style={Styles.ButtonLabel}>음성 답변</Text>
+                    <TouchableOpacity
+                        style={[Styles.ButtonWrapper, !isCallActive && Styles.ButtonDisabled]}
+                        onPress={speak}
+                        disabled={!isCallActive}
+                    >
+                        <Text style={Styles.ButtonLabel}>음성으로 답변 듣기</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <View>
-                <View style={Styles.ButtonContainer}>
-                    <TouchableOpacity
-                        style={Styles.ButtonWrapper}
-                        onPress={callId ? stopCall : startCall}
-                    >
-                        <Text style={Styles.ButtonLabel}>{callId ? "전화종료" : "전화하기"}</Text>
-                    </TouchableOpacity>
-                </View>
+            <View style={Styles.ButtonContainer}>
+                <TouchableOpacity
+                    style={[
+                        Styles.ButtonWrapper,
+                        callId ? Styles.CallQuitButtonWrapper : Styles.CallStartButtonWrapper,
+                    ]}
+                    onPress={callId ? stopCall : startCall}
+                >
+                    <Text style={Styles.CallButtonLabel}>{callId ? "통화 종료" : "통화 시작"}</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -177,7 +188,7 @@ const Styles = StyleSheet.create({
         justifyContent: "space-between",
         gap: 30,
         paddingTop: 100,
-        paddingBottom: 80,
+        paddingBottom: 90,
     },
     inputSection: {
         flex: 1,
@@ -198,7 +209,7 @@ const Styles = StyleSheet.create({
     },
 
     placeholder: {
-        color: "#aaa", // Placeholder 텍스트 색상
+        color: "#aaa",
     },
 
     OptionSection: {
@@ -229,6 +240,7 @@ const Styles = StyleSheet.create({
     ButtonContainer: {
         justifyContent: "center",
         alignItems: "center",
+        marginBottom: -20,
     },
 
     ButtonWrapper: {
@@ -242,7 +254,40 @@ const Styles = StyleSheet.create({
         backgroundColor: "#4CAF50",
     },
 
+    ButtonDisabled: {
+        backgroundColor: "#888",
+    },
+
+    ChatStartButtonWrapper: {
+        backgroundColor: "#4CAF50",
+    },
+
+    ChatQuitButtonWrapper: {
+        backgroundColor: "#ff3838",
+    },
+
+    CallStartButtonWrapper: {
+        width: "60%",
+        height: 50,
+        backgroundColor: "#4CAF50",
+        borderRadius: 30,
+    },
+
+    CallQuitButtonWrapper: {
+        width: "60%",
+        height: 50,
+        backgroundColor: "#ff3838",
+        borderRadius: 30,
+    },
+
     ButtonLabel: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+
+    CallButtonLabel: {
         color: "white",
         fontSize: 16,
         fontWeight: "bold",
